@@ -1,15 +1,24 @@
 package com.erik.canseco.movies.movielist.data.repository
 
 import android.util.Log
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.erik.canseco.movies.movielist.data.local.movie.MovieDatabase
+import com.erik.canseco.movies.movielist.data.local.movie.MovieEntity
 import com.erik.canseco.movies.movielist.data.mappers.toMovie
 import com.erik.canseco.movies.movielist.data.mappers.toMovieEntity
+import com.erik.canseco.movies.movielist.data.paging.MovieRemoteMediator
+import com.erik.canseco.movies.movielist.data.paging.MoviesPagingSource
 import com.erik.canseco.movies.movielist.data.remote.MovieApi
 import com.erik.canseco.movies.movielist.domain.model.Movie
 import com.erik.canseco.movies.movielist.domain.repository.MovieListRepository
 import com.erik.canseco.movies.movielist.domain.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import okio.IOException
 import retrofit2.HttpException
 import javax.inject.Inject
@@ -18,6 +27,11 @@ class MovieListRepositoryImpl @Inject constructor(
     private val movieApi: MovieApi,
     private val movieDatabase: MovieDatabase
 ): MovieListRepository {
+    companion object {
+        const val MAX_ITEMS_PER_PAGE = 20
+        const val PRE_FETCH_DISTANCE = 3
+    }
+
     override suspend fun getMoviesList(
         forceFetchFromRemote: Boolean,
         category: String,
@@ -51,7 +65,7 @@ class MovieListRepositoryImpl @Inject constructor(
                 .toMutableList()
             for ((index,movieEntity) in movieEntities.withIndex()) {
                 movieDatabase.movieDao.getMovieById(movieEntity.id).let { movie ->
-                    if ( movie != null && !movie.category.contains(category)) {
+                    if (!movie.category.contains(category)) {
                         Log.e("MovieListRepositoryImpl", "getMoviesList final: ${movie.category + "," + category}")
                         movieEntities.set(index,movieEntities[index].copy(category = movie.category + "," + category))
                         Log.e("MovieListRepositoryImpl", "getMoviesList movieEntities: ${movieEntities[index].category}")
@@ -78,5 +92,42 @@ class MovieListRepositoryImpl @Inject constructor(
 
 
         }
+    }
+
+    override fun getMovieList2(category: String): Flow<PagingData<Movie>> {
+        return Pager(
+            PagingConfig(
+                pageSize = 20,
+                prefetchDistance = 10
+            )
+        ){
+            movieDatabase.movieDao.getMoviesListCategoryPagination(category)
+
+        }.flow.map { value: PagingData<MovieEntity> ->
+            value.map { it.toMovie(it.category) }
+
+        }
+    }
+    override fun getMovieListCategoryPagination(category: String): Flow<PagingData<Movie>> {
+        return Pager(
+            PagingConfig(
+                pageSize = MAX_ITEMS_PER_PAGE,
+                prefetchDistance = PRE_FETCH_DISTANCE
+            ),
+            pagingSourceFactory = { MoviesPagingSource(movieApi,category) }
+        ).flow
+    }
+
+    @OptIn(ExperimentalPagingApi::class)
+    override fun getMovieListPagination(category: String): Pager<Int, MovieEntity> {
+        return Pager(
+            PagingConfig(
+                pageSize = MAX_ITEMS_PER_PAGE,
+                prefetchDistance = PRE_FETCH_DISTANCE
+            ),
+            remoteMediator = MovieRemoteMediator(category,movieDatabase,movieApi),
+            pagingSourceFactory = { movieDatabase.movieDao.getMoviesListCategoryPagination(category)
+            }
+        )
     }
 }

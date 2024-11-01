@@ -83,7 +83,8 @@ dependencies {
     implementation(libs.coil.network.okhttp)
 
     implementation(libs.androidx.material.icons)
-    implementation( libs.androidx.activity.compose.v180alpha07 )
+    implementation(libs.androidx.activity.compose.v180alpha07)
+    implementation(libs.paging.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

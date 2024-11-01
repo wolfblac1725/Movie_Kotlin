@@ -4,17 +4,16 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.erik.canseco.movies.core.presentation.PopularMoviesScreen
+import com.erik.canseco.movies.core.presentation.PopularMoviesPagerScreen
 import com.erik.canseco.movies.core.presentation.UpcomingMoviesScreen
 import com.erik.canseco.movies.movielist.domain.util.Screen
-import com.erik.canseco.movies.movielist.presentation.MovieListState
 import com.erik.canseco.movies.movielist.presentation.MovieListViewModel
 
 @Composable
 fun BottomNavHost(
     bottomNavController: NavHostController,
     navController: NavHostController,
-    route: String,movieListState: MovieListState,
+    route: String,
     model: MovieListViewModel
 ) {
     NavHost(
@@ -22,17 +21,16 @@ fun BottomNavHost(
         startDestination = route
     ) {
         composable(Screen.PopularMovies.route) {
-            PopularMoviesScreen(
+            PopularMoviesPagerScreen(
                 navController = navController,
-                movieListState = movieListState,
-                onEvent = model::onEvent
+                model = model
             )
+
         }
         composable(Screen.UpcomingMovies.route) {
             UpcomingMoviesScreen(
                 navController = navController,
-                movieListState = movieListState,
-                onEvent = model::onEvent
+                model = model
             )
         }
 
