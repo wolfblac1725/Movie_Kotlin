@@ -27,8 +27,10 @@ import com.erik.canseco.movies.movielist.presentation.MovieListViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavHostController) {
-    val movieListViewModel = hiltViewModel<MovieListViewModel>()
+fun HomeScreen(
+    navController: NavHostController,
+    movieListViewModel: MovieListViewModel = hiltViewModel()
+) {
     val movieState = movieListViewModel.moviesListState.collectAsState().value
     val bottomNavController = rememberNavController()
     Scaffold(
@@ -65,7 +67,6 @@ fun HomeScreen(navController: NavHostController) {
                 bottomNavController = bottomNavController,
                 navController = navController,
                 route = Screen.PopularMovies.route,
-                movieListState = movieState,
                 model = movieListViewModel
             )
         }

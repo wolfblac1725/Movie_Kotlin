@@ -16,11 +16,12 @@ import com.erik.canseco.movies.core.component.MovieItem
 import com.erik.canseco.movies.movielist.presentation.MovieListViewModel
 
 @Composable
-fun UpcomingMoviesScreen(
+fun PopularMoviesPagerScreen(
     model: MovieListViewModel,
     navController: NavHostController,
 ) {
-    val movieLazyPagingItems = model.movieMediatorUpcoming.collectAsLazyPagingItems()
+
+    val movieLazyPagingItems = model.movieMediatorPopular.collectAsLazyPagingItems()
 
     LazyVerticalGrid (
         columns = GridCells.Fixed(2),

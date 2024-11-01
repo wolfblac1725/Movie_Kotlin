@@ -18,6 +18,7 @@ retrofit = "2.11.0"
 okhttp = "4.12.0"
 coil-compose = "3.0.0-rc01"
 material-icons = "1.5.4"
+pagingCompose = "3.3.0"
 
 [libraries]
 androidx-activity-compose-v180alpha07 = { module = "androidx.activity:activity-compose", version.ref = "activityComposeVersion" }
@@ -51,6 +52,7 @@ okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhtt
 okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp"}
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil-compose" }
 androidx-material-icons = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "material-icons"}
+paging-compose = {group = "androidx.paging", name = "paging-compose", version.ref = "pagingCompose"}
 
 
 
