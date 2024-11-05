@@ -2,7 +2,6 @@ package com.erik.canseco.movies.movielist.data.paging
 
 import android.net.http.HttpException
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresExtension
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -53,10 +52,8 @@ class MovieRemoteMediator(
                     .toMutableList()
                 for ((index,movieEntity) in movieEntities.withIndex()) {
                     database.movieDao.getMovieById(movieEntity.id).let { movie ->
-                        if (!movie.category.contains(category)) {
-                            Log.e("MovieListRepositoryImpl", "getMoviesList final: ${movie.category + "," + category}")
+                        if (movie != null && !movie.category.contains(category)) {
                             movieEntities.set(index,movieEntities[index].copy(category = movie.category + "," + category))
-                            Log.e("MovieListRepositoryImpl", "getMoviesList movieEntities: ${movieEntities[index].category}")
                         }
                     }
                 }
