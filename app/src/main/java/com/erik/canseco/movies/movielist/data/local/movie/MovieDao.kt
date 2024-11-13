@@ -33,5 +33,10 @@ interface MovieDao {
     @Query("SELECT * FROM MovieKey where id = :category ")
     suspend fun getMovieKey(category: String): List<MovieKey>
 
+    @Query("SELECT * FROM CastEntity where idMovie = :idMovie")
+    suspend fun getCastByMovieId(idMovie: Int): List<CastEntity>
+
+    @Upsert
+    suspend fun updateCast(cast: List<CastEntity>)
 
 }

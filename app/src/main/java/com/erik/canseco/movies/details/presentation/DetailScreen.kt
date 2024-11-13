@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -44,6 +46,8 @@ import com.erik.canseco.movies.movielist.domain.util.RatingBar
 fun DetailScreen() {
     val detailsViewModel = hiltViewModel<DetailsViewModel>()
     val detailState = detailsViewModel.detailState.collectAsState().value
+    val detailCastState = detailsViewModel.detailCastState.collectAsState().value
+
     Column(modifier = Modifier
         .fillMaxWidth()
         .verticalScroll(rememberScrollState())
@@ -172,5 +176,15 @@ fun DetailScreen() {
             modifier = Modifier.padding(start = 16.dp, end = 16.dp),
             text = detailState.movie?.overview ?: "",
         )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            modifier = Modifier.padding(start = 16.dp),
+            text = "cast:",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.SemiBold
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        DetailCastItem(detailCastState.cast)
+        Spacer(modifier = Modifier.height(48.dp))
     }
 }

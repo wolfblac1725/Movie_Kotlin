@@ -8,11 +8,15 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.erik.canseco.movies.movielist.data.local.movie.MovieDatabase
 import com.erik.canseco.movies.movielist.data.local.movie.MovieEntity
+import com.erik.canseco.movies.movielist.data.mappers.toCast
+import com.erik.canseco.movies.movielist.data.mappers.toCastEntity
 import com.erik.canseco.movies.movielist.data.mappers.toMovie
 import com.erik.canseco.movies.movielist.data.mappers.toMovieEntity
 import com.erik.canseco.movies.movielist.data.paging.MovieRemoteMediator
 import com.erik.canseco.movies.movielist.data.paging.MoviesPagingSource
 import com.erik.canseco.movies.movielist.data.remote.MovieApi
+import com.erik.canseco.movies.movielist.data.remote.response.MovieCastDto
+import com.erik.canseco.movies.movielist.domain.model.Cast
 import com.erik.canseco.movies.movielist.domain.model.Movie
 import com.erik.canseco.movies.movielist.domain.repository.MovieListRepository
 import com.erik.canseco.movies.movielist.domain.util.Resource
@@ -129,5 +133,25 @@ class MovieListRepositoryImpl @Inject constructor(
             pagingSourceFactory = { movieDatabase.movieDao.getMoviesListCategoryPagination(category)
             }
         )
+    }
+
+    override fun getMovieCast(idMovie: Int): Flow<Resource<List<Cast>>> {
+        return flow {
+            emit(Resource.Loading(true))
+            val movieCast = movieDatabase.movieDao.getCastByMovieId(idMovie)
+
+            if (movieCast.isNotEmpty()) {
+                emit(Resource.Success(movieCast.map { it.toCast(idMovie) }))
+                emit(Resource.Loading(false))
+                return@flow
+            } else {
+                val movieCastApi = movieApi.getCredits(idMovie)
+                movieDatabase.movieDao.updateCast(movieCastApi.cast.map { it.toCastEntity(idMovie) })
+                emit(Resource.Success(movieCastApi.cast.map { it.toCastEntity(idMovie)}.map { it.toCast(idMovie)}))
+                emit(Resource.Loading(false))
+            }
+
+        }
+
     }
 }

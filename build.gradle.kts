@@ -4,4 +4,5 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.android.kapt) apply false
     alias(libs.plugins.dagger.hilt) apply false
+    id("androidx.room") version "2.6.0" apply false
 }

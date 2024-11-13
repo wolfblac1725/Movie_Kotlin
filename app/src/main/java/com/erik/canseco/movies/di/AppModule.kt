@@ -3,6 +3,7 @@ package com.erik.canseco.movies.di
 import android.app.Application
 import androidx.room.Room
 import com.erik.canseco.movies.movielist.data.local.movie.MovieDatabase
+import com.erik.canseco.movies.movielist.data.remote.APIKeyInterceptor
 import com.erik.canseco.movies.movielist.data.remote.MovieApi
 import dagger.Module
 import dagger.Provides
@@ -22,6 +23,7 @@ object AppModule {
     }
     private val client = OkHttpClient.Builder()
         .addInterceptor(interceptor)
+        .addInterceptor(APIKeyInterceptor())
         .build()
 
     @Singleton

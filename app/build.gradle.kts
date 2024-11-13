@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.dagger.hilt)
     alias(libs.plugins.android.kapt)
+    id("androidx.room")
 }
 
 android {
@@ -20,6 +21,9 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+    }
+    room {
+        schemaDirectory("$projectDir/schemas")
     }
 
     buildTypes {

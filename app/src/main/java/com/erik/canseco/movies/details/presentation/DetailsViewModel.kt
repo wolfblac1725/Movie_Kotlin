@@ -19,10 +19,16 @@ class DetailsViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private  val movieId = savedStateHandle.get<Int>("movieId")
+
     private val _detailState = MutableStateFlow(DetailState())
     val detailState = _detailState.asStateFlow()
+
+    private val _detailCastState = MutableStateFlow(DetailCastState())
+    val detailCastState = _detailCastState.asStateFlow()
+
     init {
         getMovie(movieId ?: -1)
+        getCast (movieId ?: -1)
     }
 
     private fun getMovie(movieId: Int) {
@@ -52,6 +58,30 @@ class DetailsViewModel @Inject constructor(
                 }
             }
         }
-
+    }
+    private fun getCast(movieId: Int) {
+        viewModelScope.launch {
+            movieListRepository.getMovieCast(movieId).collectLatest { result ->
+                when(result){
+                    is Resource.Loading -> {
+                        _detailCastState.update {
+                            it.copy(isLoading = result.isLoading)
+                        }
+                    }
+                    is Resource.Error -> {
+                        _detailCastState.update {
+                            it.copy(isLoading = false)
+                        }
+                    }
+                    is Resource.Success -> {
+                        result.data?.let { cast ->
+                            _detailCastState.update {
+                                it.copy(cast = cast)
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
