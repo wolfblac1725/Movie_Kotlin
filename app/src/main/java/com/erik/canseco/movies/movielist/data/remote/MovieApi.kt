@@ -20,7 +20,7 @@ interface MovieApi {
     companion object{
         const val BASE_URL = "https://api.themoviedb.org/3/"
         const val IMAGE_URL = "https://image.tmdb.org/t/p/w500"
-        const val API_KEY = "24b0da270f7f7499fe98810b509b6b8f"
+        const val API_KEY = "24b0da470f7f7499fe95810b709b3b8f"
         const val LANGUAGE = "es-ES"
     }
 }
