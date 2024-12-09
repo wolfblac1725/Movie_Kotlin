@@ -61,9 +61,9 @@ class MovieListRepositoryImpl @Inject constructor(
                 emit(Resource.Error(message = "Error Loading Movies"))
                 return@flow
             } catch (e: Exception){
-                e.printStackTrace()
-                emit(Resource.Error(message = "Error Loading Movies"))
-                return@flow
+                    e.printStackTrace()
+                    emit(Resource.Error(message = "Error Loading Movies"))
+                    return@flow
             }
             val movieEntities = movieListFromApi.results.let { it.map { movieDto -> movieDto.toMovieEntity(category)} }
                 .toMutableList()
