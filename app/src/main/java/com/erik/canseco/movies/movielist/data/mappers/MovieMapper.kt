@@ -2,7 +2,7 @@ package com.erik.canseco.movies.movielist.data.mappers
 
 import com.erik.canseco.movies.movielist.data.local.movie.MovieEntity
 import com.erik.canseco.movies.movielist.data.remote.response.MovieDto
-import com.erik.canseco.movies.movielist.domain.model.Movie
+import com.erik.canseco.movies.domain.model.Movie
 
 fun MovieDto.toMovieEntity(
     category: String
@@ -26,6 +26,28 @@ fun MovieDto.toMovieEntity(
         video = video ?: false,
         id = id ?: -1,
         original_title = original_title ?: "",
+        category = category,
+    )
+}
+
+fun MovieDto.toMovie(
+    category: String
+): Movie{
+    return Movie(
+        id = id ?: -1,
+        adult = adult ?: false,
+        backdrop_path = backdrop_path ?: "",
+        genre_ids = genre_ids,
+        original_language = original_language ?: "",
+        original_title = original_title ?: "",
+        overview = overview ?: "",
+        popularity = popularity ?: 0.0,
+        poster_path = poster_path ?: "",
+        release_date = release_date ?: "",
+        title = title ?: "",
+        video = video ?: false,
+        vote_average = vote_average ?: 0.0,
+        vote_count = vote_count ?: 0,
         category = category,
     )
 }

@@ -53,7 +53,7 @@ class MovieRemoteMediator(
                 for ((index,movieEntity) in movieEntities.withIndex()) {
                     database.movieDao.getMovieById(movieEntity.id).let { movie ->
                         if (movie != null && !movie.category.contains(category)) {
-                            movieEntities.set(index,movieEntities[index].copy(category = movie.category + "," + category))
+                            movieEntities[index] = movieEntities[index].copy(category = movie.category + "," + category)
                         }
                     }
                 }

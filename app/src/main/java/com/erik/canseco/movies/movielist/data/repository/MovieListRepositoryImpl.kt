@@ -15,11 +15,11 @@ import com.erik.canseco.movies.movielist.data.mappers.toMovieEntity
 import com.erik.canseco.movies.movielist.data.paging.MovieRemoteMediator
 import com.erik.canseco.movies.movielist.data.paging.MoviesPagingSource
 import com.erik.canseco.movies.movielist.data.remote.MovieApi
-import com.erik.canseco.movies.movielist.data.remote.response.MovieCastDto
-import com.erik.canseco.movies.movielist.domain.model.Cast
-import com.erik.canseco.movies.movielist.domain.model.Movie
-import com.erik.canseco.movies.movielist.domain.repository.MovieListRepository
-import com.erik.canseco.movies.movielist.domain.util.Resource
+import com.erik.canseco.movies.domain.model.Cast
+import com.erik.canseco.movies.domain.model.Movie
+import com.erik.canseco.movies.domain.repository.MovieListRepository
+import com.erik.canseco.movies.domain.util.Resource
+import com.erik.canseco.movies.utility.TypeShared
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -43,13 +43,13 @@ class MovieListRepositoryImpl @Inject constructor(
     ): Flow<Resource<List<Movie>>> {
         return flow {
             emit(Resource.Loading(true))
-            val localMoviesList = movieDatabase.movieDao.getMoviesListByCategory(category)
-            val shouldLoadLocalMovie = localMoviesList.isNotEmpty() && !forceFetchFromRemote
-            if(shouldLoadLocalMovie) {
+            //val localMoviesList = movieDatabase.movieDao.getMoviesListByCategory(category)
+            //val shouldLoadLocalMovie = localMoviesList.isNotEmpty() && !forceFetchFromRemote
+            /*if(shouldLoadLocalMovie) {
                 emit(Resource.Success(data = localMoviesList.map { it.toMovie(category) }))
                 emit(Resource.Loading(false))
                 return@flow
-            }
+            }*/
             val movieListFromApi = try {
                 movieApi.getMoviesList(category, page)
             } catch (e: IOException) {
@@ -69,10 +69,18 @@ class MovieListRepositoryImpl @Inject constructor(
                 .toMutableList()
             for ((index,movieEntity) in movieEntities.withIndex()) {
                 movieDatabase.movieDao.getMovieById(movieEntity.id).let { movie ->
-                    if (!movie.category.contains(category)) {
-                        Log.e("MovieListRepositoryImpl", "getMoviesList final: ${movie.category + "," + category}")
-                        movieEntities.set(index,movieEntities[index].copy(category = movie.category + "," + category))
-                        Log.e("MovieListRepositoryImpl", "getMoviesList movieEntities: ${movieEntities[index].category}")
+                    movie?.category?.let {
+                        if (!it.contains(category)) {
+                            Log.e(
+                                "MovieListRepositoryImpl",
+                                "getMoviesList final: ${movie.category + "," + category}"
+                            )
+                            movieEntities[index] = movieEntities[index].copy(category = movie.category + "," + category)
+                            Log.e(
+                                "MovieListRepositoryImpl",
+                                "getMoviesList movieEntities: ${movieEntities[index].category}"
+                            )
+                        }
                     }
                 }
             }
@@ -152,6 +160,39 @@ class MovieListRepositoryImpl @Inject constructor(
             }
 
         }
+    }
 
+    override fun getMovieList(type: TypeShared): Flow<Resource<List<Movie>>> {
+        return flow {
+            emit(Resource.Loading(true))
+            when (type){
+                is TypeShared.Popular -> {
+                    emit(Resource.Success(movieApi.getMoviesList("popular",1).results.map{it.toMovie("popular")}))
+                    emit(Resource.Loading(false))
+                    return@flow
+                }
+                is TypeShared.TopRated -> {
+                    emit(Resource.Success(movieApi.getMoviesList("top_rated",1).results.map { it.toMovie("top_rated")}))
+                    emit(Resource.Loading(false))
+                    return@flow
+                }
+                is TypeShared.NowPlaying -> {
+                    emit(Resource.Success(movieApi.getMoviesList("now_playing",1).results.map { it.toMovie("now_playing") }))
+                    emit(Resource.Loading(false))
+                    return@flow
+                }
+            }
+        }
+    }
+
+
+    override fun getMovieCastDetail(idMovie: Int): Flow<Resource<List<Cast>>> {
+        return flow {
+            emit(Resource.Loading(true))
+            val movieCast = movieApi.getCredits(idMovie).cast.map { it.toCast() }
+            emit(Resource.Success(movieCast))
+            emit(Resource.Loading(false))
+            return@flow
+        }
     }
 }

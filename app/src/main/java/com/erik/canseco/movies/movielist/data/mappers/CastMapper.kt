@@ -2,7 +2,7 @@ package com.erik.canseco.movies.movielist.data.mappers
 
 import com.erik.canseco.movies.movielist.data.local.movie.CastEntity
 import com.erik.canseco.movies.movielist.data.remote.response.CastDto
-import com.erik.canseco.movies.movielist.domain.model.Cast
+import com.erik.canseco.movies.domain.model.Cast
 
 fun CastDto.toCastEntity(
     idMovie: Int
@@ -21,6 +21,23 @@ fun CastDto.toCastEntity(
         original_name = original_name ?: "",
         popularity = popularity ?: 0.0,
         profile_path = profile_path ?: ""
+    )
+}
+fun CastDto.toCast(): Cast {
+    return Cast(
+        id ?: -1 ,
+        id ?: -1 ,
+        adult ?: false,
+        cast_id ?: -1 ,
+        character ?: "",
+        credit_id ?: "",
+        gender ?: -1 ,
+        known_for_department ?: "",
+        name ?: "",
+        order ?: -1 ,
+        original_name ?: "",
+        popularity ?: 0.0,
+        profile_path ?: ""
     )
 }
 fun CastEntity.toCast(

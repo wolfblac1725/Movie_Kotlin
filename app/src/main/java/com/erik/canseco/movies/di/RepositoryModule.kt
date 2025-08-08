@@ -1,7 +1,7 @@
 package com.erik.canseco.movies.di
 
 import com.erik.canseco.movies.movielist.data.repository.MovieListRepositoryImpl
-import com.erik.canseco.movies.movielist.domain.repository.MovieListRepository
+import com.erik.canseco.movies.domain.repository.MovieListRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

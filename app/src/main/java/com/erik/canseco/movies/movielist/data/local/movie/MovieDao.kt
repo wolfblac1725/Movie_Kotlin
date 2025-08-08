@@ -13,7 +13,7 @@ interface MovieDao {
     suspend fun updateMovie(movie: MovieEntity)
 
     @Query("SELECT * FROM MovieEntity where id = :id")
-    suspend fun getMovieById(id: Int): MovieEntity
+    suspend fun getMovieById(id: Int): MovieEntity?
 
     @Query("SELECT * FROM MovieEntity where category LIKE '%'||:category||'%'")
     suspend fun getMoviesListByCategory(category: String): List<MovieEntity>

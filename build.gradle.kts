@@ -2,7 +2,9 @@
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
-    alias(libs.plugins.android.kapt) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.ksp) apply false
     alias(libs.plugins.dagger.hilt) apply false
-    id("androidx.room") version "2.6.0" apply false
+    alias(libs.plugins.androidx.room) apply false
+    alias(libs.plugins.kotlin.compose) apply false
 }
