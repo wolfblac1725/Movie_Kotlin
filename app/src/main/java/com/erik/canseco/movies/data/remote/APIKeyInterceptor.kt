@@ -1,7 +1,7 @@
-package com.erik.canseco.movies.movielist.data.remote
+package com.erik.canseco.movies.data.remote
 
-import com.erik.canseco.movies.movielist.data.remote.MovieApi.Companion.API_KEY
-import com.erik.canseco.movies.movielist.data.remote.MovieApi.Companion.LANGUAGE
+import com.erik.canseco.movies.data.remote.MovieApi.Companion.API_KEY
+import com.erik.canseco.movies.data.remote.MovieApi.Companion.LANGUAGE
 import okhttp3.Interceptor
 import okhttp3.Response
 

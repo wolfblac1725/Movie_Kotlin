@@ -1,7 +1,7 @@
-package com.erik.canseco.movies.movielist.data.remote
+package com.erik.canseco.movies.data.remote
 
-import com.erik.canseco.movies.movielist.data.remote.response.MovieCastDto
-import com.erik.canseco.movies.movielist.data.remote.response.MovieListDto
+import com.erik.canseco.movies.data.remote.response.MovieCastDto
+import com.erik.canseco.movies.data.remote.response.MovieListDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

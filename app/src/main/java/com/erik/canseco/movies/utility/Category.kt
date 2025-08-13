@@ -1,4 +1,4 @@
-package com.erik.canseco.movies.domain.util
+package com.erik.canseco.movies.utility
 
 object Category {
     const val POPULAR = "popular"

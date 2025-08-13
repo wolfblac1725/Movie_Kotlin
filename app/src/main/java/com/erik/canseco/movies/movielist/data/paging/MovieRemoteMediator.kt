@@ -12,7 +12,7 @@ import com.erik.canseco.movies.movielist.data.local.movie.MovieDatabase
 import com.erik.canseco.movies.movielist.data.local.movie.MovieEntity
 import com.erik.canseco.movies.movielist.data.local.movie.MovieKey
 import com.erik.canseco.movies.movielist.data.mappers.toMovieEntity
-import com.erik.canseco.movies.movielist.data.remote.MovieApi
+import com.erik.canseco.movies.data.remote.MovieApi
 import okio.IOException
 
 @OptIn(ExperimentalPagingApi::class)

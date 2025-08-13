@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.erik.canseco.movies.domain.repository.MovieListRepository
-import com.erik.canseco.movies.domain.util.Resource
+import com.erik.canseco.movies.utility.Resource
 import com.erik.canseco.movies.utility.TypeShared
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest

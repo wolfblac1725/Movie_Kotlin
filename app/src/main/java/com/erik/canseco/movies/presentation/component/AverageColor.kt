@@ -1,4 +1,4 @@
-package com.erik.canseco.movies.domain.util
+package com.erik.canseco.movies.presentation.component
 
 import android.graphics.Bitmap
 import androidx.compose.runtime.Composable

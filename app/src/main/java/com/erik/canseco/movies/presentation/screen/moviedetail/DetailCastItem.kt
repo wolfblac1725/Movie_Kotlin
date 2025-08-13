@@ -31,7 +31,7 @@ import coil3.compose.SubcomposeAsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.erik.canseco.movies.R
-import com.erik.canseco.movies.movielist.data.remote.MovieApi
+import com.erik.canseco.movies.data.remote.MovieApi
 import com.erik.canseco.movies.domain.model.Cast
 
 @Composable

@@ -30,9 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.request.ImageRequest
-import com.erik.canseco.movies.movielist.data.remote.MovieApi
+import com.erik.canseco.movies.data.remote.MovieApi
 import com.erik.canseco.movies.domain.model.Movie
-import com.erik.canseco.movies.domain.util.RatingBar
 import com.erik.canseco.movies.ui.theme.MoviesTheme
 import com.erik.canseco.movies.utility.UtilityFun
 

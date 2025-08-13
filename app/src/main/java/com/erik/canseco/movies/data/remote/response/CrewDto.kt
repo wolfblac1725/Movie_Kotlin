@@ -1,4 +1,4 @@
-package com.erik.canseco.movies.movielist.data.remote.response
+package com.erik.canseco.movies.data.remote.response
 
 data class CrewDto(
     val id: Int,

@@ -4,7 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.erik.canseco.movies.movielist.data.mappers.toMovie
 import com.erik.canseco.movies.movielist.data.mappers.toMovieEntity
-import com.erik.canseco.movies.movielist.data.remote.MovieApi
+import com.erik.canseco.movies.data.remote.MovieApi
 import com.erik.canseco.movies.domain.model.Movie
 import okio.IOException
 import javax.inject.Inject
