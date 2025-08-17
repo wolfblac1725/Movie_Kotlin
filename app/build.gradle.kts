@@ -10,11 +10,11 @@ plugins {
 
 android {
     namespace = "com.erik.canseco.movies"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.erik.canseco.movies"
-        targetSdk = 35
+        targetSdk = 36
         minSdk = 21
         versionCode = 3
         versionName = "2.0"
@@ -92,6 +92,7 @@ dependencies {
 
     implementation(libs.androidx.material.icons)
     implementation(libs.paging.compose)
+    implementation(libs.paging.runtime)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

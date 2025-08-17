@@ -27,22 +27,52 @@ class HomeViewModel @Inject constructor(
 
     fun getMovies () {
         viewModelScope.launch {
-            movieListRepository.getMovieList(state.typeShared).collectLatest {
+            movieListRepository.getMovieList(state.typeShared, page = 1).collectLatest {
                 when(it){
                     is Resource.Error -> {
-                        state = state.copy(
-                            error = it.message
-                        )
+                        state = when (state.typeShared) {
+                            TypeShared.Popular ->{
+                                state.copy(moviesPopular = state.moviesPopular.copy( error = it.message))
+                            }
+
+                            TypeShared.TopRated ->{
+                                state.copy(moviesTopRated = state.moviesTopRated.copy( error = it.message))
+                            }
+
+                            TypeShared.NowPlaying ->{
+                                state.copy(moviesNowPlaying = state.moviesNowPlaying.copy( error = it.message))
+                            }
+                        }
                     }
                     is Resource.Loading -> {
-                        state = state.copy(
-                            isLoading = it.isLoading
-                        )
+                        state = when (state.typeShared) {
+                            TypeShared.Popular -> {
+                                state.copy(moviesPopular = state.moviesPopular.copy(isLoading = it.isLoading))
+                            }
+
+                            TypeShared.TopRated -> {
+                                state.copy(moviesTopRated = state.moviesTopRated.copy(isLoading = it.isLoading))
+                            }
+
+                            TypeShared.NowPlaying -> {
+                                state.copy(moviesNowPlaying = state.moviesNowPlaying.copy(isLoading = it.isLoading))
+                            }
+                        }
                     }
                     is Resource.Success -> {
-                        state = state.copy(
-                            movies = it.data ?: emptyList()
-                        )
+                        state = when (state.typeShared) {
+                            TypeShared.Popular -> {
+                                state.copy(moviesPopular = state.moviesPopular.copy(movies = it.data ?: emptyList()))
+                            }
+
+                            TypeShared.TopRated -> {
+                                state.copy(moviesTopRated = state.moviesTopRated.copy(movies = it.data ?: emptyList()))
+                            }
+
+                            TypeShared.NowPlaying -> {
+                                state.copy(moviesNowPlaying = state.moviesNowPlaying.copy(movies = it.data ?: emptyList()))
+                            }
+                        }
                     }
                 }
             }

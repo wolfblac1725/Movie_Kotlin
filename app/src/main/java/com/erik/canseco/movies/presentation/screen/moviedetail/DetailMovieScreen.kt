@@ -221,7 +221,7 @@ fun DetailMovieScreen(
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     modifier = Modifier.padding(start = 16.dp),
-                    text = "overview:",
+                    text = stringResource(R.string.overview),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -233,7 +233,7 @@ fun DetailMovieScreen(
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     modifier = Modifier.padding(start = 16.dp),
-                    text = "cast:",
+                    text = stringResource(R.string.cast),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold
                 )

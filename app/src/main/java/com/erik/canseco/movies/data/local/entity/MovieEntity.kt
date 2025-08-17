@@ -1,4 +1,4 @@
-package com.erik.canseco.movies.movielist.data.local.movie
+package com.erik.canseco.movies.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

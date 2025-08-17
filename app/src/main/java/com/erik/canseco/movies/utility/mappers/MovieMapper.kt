@@ -1,6 +1,6 @@
-package com.erik.canseco.movies.movielist.data.mappers
+package com.erik.canseco.movies.utility.mappers
 
-import com.erik.canseco.movies.movielist.data.local.movie.MovieEntity
+import com.erik.canseco.movies.data.local.entity.MovieEntity
 import com.erik.canseco.movies.data.remote.response.MovieDto
 import com.erik.canseco.movies.domain.model.Movie
 

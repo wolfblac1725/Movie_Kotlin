@@ -1,8 +1,6 @@
 package com.erik.canseco.movies.presentation.screen.home
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -12,9 +10,9 @@ import androidx.compose.ui.Modifier
 
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.erik.canseco.movies.presentation.component.BottomNavigationBar
+import com.erik.canseco.movies.presentation.component.ListViewComponent
 import com.erik.canseco.movies.presentation.component.Loader
-import com.erik.canseco.movies.presentation.component.MovieItem
-import kotlinx.serialization.json.Json
+import com.erik.canseco.movies.utility.TypeShared
 
 
 @Composable
@@ -57,26 +55,46 @@ fun HomeScreen(
             )
         },
         content = { padding ->
-            if(state.isLoading) {
-                Loader()
-            }else if(state.error != null) {
-                Text(text = state.error)
-            } else{
-                LazyVerticalGrid(
-                    modifier = Modifier.padding(padding),
-                    columns = GridCells.Fixed(2)
-                ) {
-                    items(state.movies.size) {
-                        MovieItem(
-                            movie = state.movies[it],
-                            onClick = {
-                                val json = Json { ignoreUnknownKeys = true }
-                                val movie = state.movies[it]
-                                val movieJson = json.encodeToString(movie)
-                                action(ActionHome.DetailMovie(movieJson))
-                            }
+
+            when(state.typeShared){
+                TypeShared.Popular -> {
+                    if(state.moviesPopular.isLoading)
+                        Loader()
+                    else if (state.moviesPopular.error != null)
+                        Text(text = state.moviesPopular.error)
+                    else
+                        ListViewComponent(
+                            column = 2,
+                            movies = state.moviesPopular.movies,
+                            action = action,
+                            modifier = Modifier.padding(padding)
                         )
-                    }
+                }
+                TypeShared.TopRated -> {
+                    if(state.moviesTopRated.isLoading)
+                        Loader()
+                    else if (state.moviesTopRated.error != null)
+                        Text(text = state.moviesTopRated.error)
+                    else
+                        ListViewComponent(
+                            column = 2,
+                            movies = state.moviesTopRated.movies,
+                            action = action,
+                            modifier = Modifier.padding(padding)
+                        )
+                }
+                TypeShared.NowPlaying -> {
+                    if(state.moviesNowPlaying.isLoading)
+                        Loader()
+                    else if (state.moviesNowPlaying.error != null)
+                        Text(text = state.moviesNowPlaying.error)
+                    else
+                        ListViewComponent(
+                            column = 2,
+                            movies = state.moviesNowPlaying.movies,
+                            action = action,
+                            modifier = Modifier.padding(padding)
+                        )
                 }
             }
         },
@@ -86,5 +104,4 @@ fun HomeScreen(
             )
         }
     )
-
 }

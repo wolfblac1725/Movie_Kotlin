@@ -1,9 +1,13 @@
-package com.erik.canseco.movies.movielist.data.local.movie
+package com.erik.canseco.movies.data.local
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Upsert
+import com.erik.canseco.movies.data.local.entity.CastEntity
+import com.erik.canseco.movies.data.local.entity.MovieEntity
+import com.erik.canseco.movies.data.local.entity.MovieKey
 
 @Dao
 interface MovieDao {
@@ -39,4 +43,26 @@ interface MovieDao {
     @Upsert
     suspend fun updateCast(cast: List<CastEntity>)
 
+    // Nuevas funciones para el borrado inteligente por categoría
+    @Query("SELECT * FROM MovieEntity WHERE category LIKE '%' || :categoryToFilter || '%'")
+    suspend fun getMoviesAssociatedWithCategory(categoryToFilter: String): List<MovieEntity>
+
+    @Query("DELETE FROM MovieEntity WHERE id = :movieId")
+    suspend fun deleteMovieById(movieId: Int)
+
+    @Transaction
+    suspend fun clearMoviesForCategory(categoryToClear: String) {
+        val moviesToProcess = getMoviesAssociatedWithCategory(categoryToClear)
+        for (movie in moviesToProcess) {
+            val categories = movie.category.split(',').map { it.trim() }.toMutableList()
+            if (categories.contains(categoryToClear)) {
+                categories.remove(categoryToClear)
+                if (categories.isEmpty()) {
+                    deleteMovieById(movie.id)
+                } else {
+                    updateMovie(movie.copy(category = categories.joinToString(",")))
+                }
+            }
+        }
+    }
 }

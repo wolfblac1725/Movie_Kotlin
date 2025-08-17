@@ -59,6 +59,7 @@ okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-i
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil-compose" }
 androidx-material-icons = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "material-icons"}
 paging-compose = {group = "androidx.paging", name = "paging-compose", version.ref = "pagingCompose"}
+paging-runtime = {group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "pagingCompose"}
 google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "fontVersion"}
 
 

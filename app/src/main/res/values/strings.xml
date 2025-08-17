@@ -10,4 +10,6 @@
     <string name="votes">Votos</string>
     <string name="movie">Peliculas</string>
     <string name="character">Personaje: %s </string>
+    <string name="overview">Descripción:</string>
+    <string name="cast">Elenco:</string>
 </resources>
