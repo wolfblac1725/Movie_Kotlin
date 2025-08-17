@@ -1,10 +1,15 @@
 <resources>
     <string name="app_name">Paliculas</string>
     <string name="popular">Populares</string>
-    <string name="upcoming">Proximamente</string>
+    <string name="top_rated">Tendencia</string>
+    <string name="now_playing">En cines</string>
     <string name="popular_movies">Peliculas Populares</string>
     <string name="upcoming_movies">Proximas peliculas</string>
     <string name="language">"Idioma:  "</string>
     <string name="release_date">"Fecha de estreno: "</string>
     <string name="votes">Votos</string>
+    <string name="movie">Peliculas</string>
+    <string name="character">Personaje: %s </string>
+    <string name="overview">Descripción:</string>
+    <string name="cast">Elenco:</string>
 </resources>

@@ -2,9 +2,9 @@ package com.erik.canseco.movies.di
 
 import android.app.Application
 import androidx.room.Room
-import com.erik.canseco.movies.movielist.data.local.movie.MovieDatabase
-import com.erik.canseco.movies.movielist.data.remote.APIKeyInterceptor
-import com.erik.canseco.movies.movielist.data.remote.MovieApi
+import com.erik.canseco.movies.data.local.MovieDatabase
+import com.erik.canseco.movies.data.remote.APIKeyInterceptor
+import com.erik.canseco.movies.data.remote.MovieApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
