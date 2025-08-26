@@ -1,5 +1,6 @@
 package com.erik.canseco.movies.utility.mappers
 
+import android.util.Log
 import com.erik.canseco.movies.data.local.entity.MovieEntity
 import com.erik.canseco.movies.data.remote.response.MovieDto
 import com.erik.canseco.movies.domain.model.Movie
@@ -13,6 +14,7 @@ fun MovieDto.toMovieEntity(
         genre_ids = try {
             genre_ids?.joinToString(",") ?: "-1,-2"
         } catch (e: Exception) {
+            Log.e("Error",e.toString())
             "-1,-2"
         },
         original_language = original_language ?: "",
@@ -24,7 +26,7 @@ fun MovieDto.toMovieEntity(
         popularity = popularity ?: 0.0,
         vote_count = vote_count ?: 0,
         video = video ?: false,
-        id = id ?: -1,
+        id = id ,
         original_title = original_title ?: "",
         category = category,
     )
@@ -34,7 +36,7 @@ fun MovieDto.toMovie(
     category: String
 ): Movie{
     return Movie(
-        id = id ?: -1,
+        id = id,
         adult = adult ?: false,
         backdrop_path = backdrop_path ?: "",
         genre_ids = genre_ids,
@@ -73,6 +75,7 @@ fun MovieEntity.toMovie(
         genre_ids = try {
             genre_ids.split(",").map { it.toInt() }
         } catch (e: Exception) {
+            Log.e("Error",e.toString())
             listOf(-1,-2)
         },
     )

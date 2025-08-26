@@ -65,4 +65,18 @@ interface MovieDao {
             }
         }
     }
+    @Transaction
+    suspend fun updateMovieListCategory(movieList: List<MovieEntity>) {
+        for(movie in movieList){
+            val movieData = getMovieById(movie.id)
+            if(movieData == null)
+                updateMovie(movie)
+            else
+                updateMovie(movieData.copy(category = movieData.category.plus(",").plus(movie.category)))
+        }
+    }
+
+    // En MovieDao.kt
+    @Query("DELETE FROM MovieKey WHERE id = :category")
+    suspend fun deleteMovieKeyByCategory(category: String)
 }

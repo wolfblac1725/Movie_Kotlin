@@ -45,5 +45,8 @@ object AppModule {
             "moviedb.db"
         ).build()
     }
+    @Singleton
+    @Provides
+    fun providesMovieDao(movieDatabase: MovieDatabase) = movieDatabase.movieDao
 
 }
