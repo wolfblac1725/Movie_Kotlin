@@ -8,7 +8,7 @@ import com.erik.canseco.movies.utility.TypeShared
 import kotlinx.coroutines.flow.Flow
 
 interface MovieListRepository {
-    fun getMovieList(type: TypeShared,page: Int): Flow<Resource<List<Movie>>>
     fun getMovieListPaging(type: TypeShared): Flow<PagingData<Movie>>
+    fun getMovieListPaging2(type: TypeShared): Flow<PagingData<Movie>>
     fun getMovieCastDetail(idMovie: Int): Flow<Resource<List<Cast>>>
 }

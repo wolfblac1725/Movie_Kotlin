@@ -8,6 +8,7 @@ import androidx.room.Upsert
 import com.erik.canseco.movies.data.local.entity.CastEntity
 import com.erik.canseco.movies.data.local.entity.MovieEntity
 import com.erik.canseco.movies.data.local.entity.MovieKey
+import com.erik.canseco.movies.data.local.entity.MoviePage
 
 @Dao
 interface MovieDao {
@@ -24,6 +25,14 @@ interface MovieDao {
 
     @Query("SELECT * FROM MovieEntity where category LIKE '%'||:category||'%'")
     fun getMoviesListCategoryPagination(category: String): PagingSource<Int, MovieEntity>
+
+    @Query("SELECT * FROM MovieEntity where category LIKE '%'||:category||'%' order by popularity desc")
+    fun getMoviesListCategoryPaginationPopular(category: String): PagingSource<Int, MovieEntity>
+    @Query("SELECT * FROM MovieEntity where category LIKE '%'||:category||'%' order by vote_average desc")
+    fun getMoviesListCategoryPaginationToRated(category: String): PagingSource<Int, MovieEntity>
+
+    @Query("SELECT * FROM MovieEntity where category LIKE '%'||:category||'%' order by release_date desc")
+    fun getMoviesListCategoryPaginationNowPlaying(category: String): PagingSource<Int, MovieEntity>
 
     @Query("DELETE FROM MovieEntity")
     fun clearMovieList()
@@ -79,4 +88,19 @@ interface MovieDao {
     // En MovieDao.kt
     @Query("DELETE FROM MovieKey WHERE id = :category")
     suspend fun deleteMovieKeyByCategory(category: String)
+
+    @Query("SELECT lastUpdated FROM MoviePage WHERE category = :category")
+    suspend fun lastUpdated(category: String): Long
+
+    @Query("DELETE FROM MoviePage WHERE category = :category")
+    suspend fun clearMoviePageByCategory(category: String)
+
+    @Upsert
+    suspend fun updateMoviePage(moviePage: MoviePage)
+
+    @Query("SELECT * FROM MoviePage WHERE category = :category")
+    suspend fun getMoviePageByCategory(category: String): MoviePage?
+
+    @Query("SELECT page FROM MoviePage WHERE category = :category")
+    suspend fun getPageByCategory(category: String): Int?
 }

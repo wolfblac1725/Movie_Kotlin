@@ -29,7 +29,7 @@ class HomeViewModel @Inject constructor(
     private val _currentCategory = MutableStateFlow(state.typeShared)
 
     val movies: Flow<PagingData<Movie>> = _currentCategory.flatMapLatest { category ->
-        movieListRepository.getMovieListPaging(category)
+        movieListRepository.getMovieListPaging2(category)
     }.cachedIn(viewModelScope)
 
 
