@@ -50,10 +50,10 @@ fun BottomNavigationBar(
                             onEvent(ActionHome.MoviesTopRated)
                         }
                         1 -> {
-                            onEvent(ActionHome.MoviesNowPlaying)
+                            onEvent(ActionHome.MoviesPopular)
                         }
                         2 -> {
-                            onEvent(ActionHome.MoviesPopular)
+                            onEvent(ActionHome.MoviesNowPlaying)
                         }
                     }
                 },

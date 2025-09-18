@@ -5,101 +5,53 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.erik.canseco.movies.domain.model.Movie
 import com.erik.canseco.movies.domain.repository.MovieListRepository
-import com.erik.canseco.movies.utility.Resource
 import com.erik.canseco.movies.utility.TypeShared
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-   val  movieListRepository: MovieListRepository
-):ViewModel() {
+    private val movieListRepository: MovieListRepository
+) : ViewModel() {
+
     var state by mutableStateOf(HomeState())
         private set
 
-    init {
-        setCategory(TypeShared.TopRated)
-        getMovies()
-    }
+    private val _currentCategory = MutableStateFlow(state.typeShared)
 
-    fun getMovies () {
-        viewModelScope.launch {
-            movieListRepository.getMovieList(state.typeShared, page = 1).collectLatest {
-                when(it){
-                    is Resource.Error -> {
-                        state = when (state.typeShared) {
-                            TypeShared.Popular ->{
-                                state.copy(moviesPopular = state.moviesPopular.copy( error = it.message))
-                            }
+    val movies: Flow<PagingData<Movie>> = _currentCategory.flatMapLatest { category ->
+        movieListRepository.getMovieListPaging2(category)
+    }.cachedIn(viewModelScope)
 
-                            TypeShared.TopRated ->{
-                                state.copy(moviesTopRated = state.moviesTopRated.copy( error = it.message))
-                            }
 
-                            TypeShared.NowPlaying ->{
-                                state.copy(moviesNowPlaying = state.moviesNowPlaying.copy( error = it.message))
-                            }
-                        }
-                    }
-                    is Resource.Loading -> {
-                        state = when (state.typeShared) {
-                            TypeShared.Popular -> {
-                                state.copy(moviesPopular = state.moviesPopular.copy(isLoading = it.isLoading))
-                            }
-
-                            TypeShared.TopRated -> {
-                                state.copy(moviesTopRated = state.moviesTopRated.copy(isLoading = it.isLoading))
-                            }
-
-                            TypeShared.NowPlaying -> {
-                                state.copy(moviesNowPlaying = state.moviesNowPlaying.copy(isLoading = it.isLoading))
-                            }
-                        }
-                    }
-                    is Resource.Success -> {
-                        state = when (state.typeShared) {
-                            TypeShared.Popular -> {
-                                state.copy(moviesPopular = state.moviesPopular.copy(movies = it.data ?: emptyList()))
-                            }
-
-                            TypeShared.TopRated -> {
-                                state.copy(moviesTopRated = state.moviesTopRated.copy(movies = it.data ?: emptyList()))
-                            }
-
-                            TypeShared.NowPlaying -> {
-                                state.copy(moviesNowPlaying = state.moviesNowPlaying.copy(movies = it.data ?: emptyList()))
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
     fun onAction(action: ActionHome) {
         when (action) {
             is ActionHome.MoviesPopular -> {
+                _currentCategory.value = TypeShared.Popular
                 state = state.copy(typeShared = TypeShared.Popular)
-                getMovies()
             }
 
             is ActionHome.MoviesTopRated -> {
+                _currentCategory.value = TypeShared.TopRated
                 state = state.copy(typeShared = TypeShared.TopRated)
-                getMovies()
             }
 
             is ActionHome.MoviesNowPlaying -> {
+                _currentCategory.value = TypeShared.NowPlaying
                 state = state.copy(typeShared = TypeShared.NowPlaying)
-                getMovies()
             }
             else -> {
 
             }
         }
-    }
-    fun setCategory(type: TypeShared) {
-        state = state.copy(typeShared = type)
     }
 }

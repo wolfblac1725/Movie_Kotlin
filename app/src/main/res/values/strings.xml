@@ -2,7 +2,7 @@
     <string name="app_name">Paliculas</string>
     <string name="popular">Populares</string>
     <string name="top_rated">Tendencia</string>
-    <string name="now_playing">En cines</string>
+    <string name="now_playing">Lo más Nuevo</string>
     <string name="popular_movies">Peliculas Populares</string>
     <string name="upcoming_movies">Proximas peliculas</string>
     <string name="language">"Idioma:  "</string>

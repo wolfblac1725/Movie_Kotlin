@@ -4,7 +4,7 @@ import com.erik.canseco.movies.domain.model.Movie
 import com.erik.canseco.movies.utility.TypeShared
 
 data class HomeState(
-    val typeShared: TypeShared = TypeShared.Popular,
+    val typeShared: TypeShared = TypeShared.TopRated,
     val moviesPopular: MovilPage = MovilPage(),
     val moviesTopRated: MovilPage = MovilPage(),
     val moviesNowPlaying: MovilPage = MovilPage(),

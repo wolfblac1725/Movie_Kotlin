@@ -9,11 +9,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.erik.canseco.movies.domain.model.Movie
 import com.erik.canseco.movies.presentation.component.BottomNavigationBar
 import com.erik.canseco.movies.presentation.component.ListViewComponent
-import com.erik.canseco.movies.presentation.component.Loader
-import com.erik.canseco.movies.utility.TypeShared
-
 
 @Composable
 fun HomeScreenRoot(
@@ -23,8 +23,9 @@ fun HomeScreenRoot(
     val homeViewModel: HomeViewModel = hiltViewModel()
 
     HomeScreen(
-        state = homeViewModel.state,
         modifier = modifier,
+        state = homeViewModel.state,
+        movies = homeViewModel.movies.collectAsLazyPagingItems(),
         action = { action ->
             when(action) {
                 is ActionHome.DetailMovie -> {
@@ -43,6 +44,7 @@ fun HomeScreenRoot(
 fun HomeScreen(
     state: HomeState,
     modifier: Modifier = Modifier,
+    movies: LazyPagingItems<Movie>,
     action: (ActionHome) -> Unit
 ) {
     Scaffold(
@@ -56,7 +58,13 @@ fun HomeScreen(
         },
         content = { padding ->
 
-            when(state.typeShared){
+            ListViewComponent(
+                column = 2,
+                movies = movies,
+                action = action,
+                modifier = Modifier.padding(padding)
+            )
+           /* when(state.typeShared){
                 TypeShared.Popular -> {
                     if(state.moviesPopular.isLoading)
                         Loader()
@@ -96,7 +104,7 @@ fun HomeScreen(
                             modifier = Modifier.padding(padding)
                         )
                 }
-            }
+            }*/
         },
         bottomBar = {
             BottomNavigationBar(
