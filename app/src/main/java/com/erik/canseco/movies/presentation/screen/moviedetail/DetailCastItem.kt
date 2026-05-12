@@ -1,6 +1,7 @@
 package com.erik.canseco.movies.presentation.screen.moviedetail
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,13 +31,15 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.erik.canseco.movies.BuildConfig
 import com.erik.canseco.movies.R
 import com.erik.canseco.movies.data.remote.MovieApi
 import com.erik.canseco.movies.domain.model.Cast
 
 @Composable
 fun DetailCastItem(
-    listCast: List<Cast>
+    listCast: List<Cast>,
+    onClick: (Int) -> Unit
 ) {
     LazyRow(
         contentPadding = PaddingValues(8.dp)
@@ -44,11 +47,11 @@ fun DetailCastItem(
         items(listCast.size) { index ->
             val cast = listCast[index]
             Column(
-                modifier = Modifier.width(160.dp).padding(8.dp)
+                modifier = Modifier.width(160.dp).padding(8.dp).clickable{ onClick(cast.id) }
             ) {
                 SubcomposeAsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data(MovieApi.IMAGE_URL + cast.profile_path)
+                        .data(BuildConfig.IMAGE_URL + cast.profile_path)
                         .crossfade(true)
                         .build(),
                     modifier = Modifier

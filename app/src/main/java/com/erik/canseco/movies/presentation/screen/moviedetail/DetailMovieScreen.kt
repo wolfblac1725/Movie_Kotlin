@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,13 +18,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.rounded.ImageNotSupported
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -42,22 +44,26 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.SubcomposeAsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.erik.canseco.movies.BuildConfig
 import com.erik.canseco.movies.R
 import com.erik.canseco.movies.domain.model.Movie
 import com.erik.canseco.movies.presentation.component.RatingBar
-import com.erik.canseco.movies.data.remote.MovieApi
+import com.erik.canseco.movies.domain.model.Genre
+import com.erik.canseco.movies.presentation.component.Loader
 import com.erik.canseco.movies.ui.theme.MoviesTheme
 
 @Composable
 fun DetailMovieScreenRoot(
+    modifier: Modifier = Modifier,
     viewModel: DetailMovieViewModel = hiltViewModel(),
     movie: Movie,
     onBack: () -> Unit,
-    modifier: Modifier = Modifier
+    onDetailPersonal: (Int) -> Unit
 ) {
     LaunchedEffect(movie) {
         viewModel.setMovie(movie)
         viewModel.getCast(movie.id)
+        viewModel.getGenres(movie.genre_ids)
     }
     val state = viewModel.state
     DetailMovieScreen(
@@ -68,8 +74,8 @@ fun DetailMovieScreenRoot(
                 is DetailMovieAction.Back -> {
                     onBack()
                 }
-                else -> {
-
+                is DetailMovieAction.DetailPersonal -> {
+                    onDetailPersonal(action.actorId)
                 }
             }
         }
@@ -89,22 +95,29 @@ fun DetailMovieScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(state.movie?.title ?: "", fontSize = 20.sp,)
+                    Text(state.movie?.title ?: "", fontSize = 20.sp)
                 },
                 navigationIcon = {
                     IconButton(onClick = { onAction(DetailMovieAction.Back) }) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                     }
                 }
             )
         },
         content = { padding ->
+            if (state.isLoading)
+                Loader(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(padding)
+                        .height(240.dp)
+                )
             Column(modifier = Modifier
                 .padding(padding)
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
             ) {
-                val imageUrl= MovieApi.IMAGE_URL + state.movie?.backdrop_path
+                val imageUrl= BuildConfig.IMAGE_URL + state.movie?.backdrop_path
                 Log.e("imageUrl", imageUrl)
                 SubcomposeAsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
@@ -145,7 +158,7 @@ fun DetailMovieScreen(
                     ) {
                         SubcomposeAsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)
-                                .data(MovieApi.IMAGE_URL + state.movie?.poster_path)
+                                .data(BuildConfig.IMAGE_URL + state.movie?.poster_path)
                                 .crossfade(true)
                                 .build(),
                             modifier = Modifier
@@ -218,19 +231,37 @@ fun DetailMovieScreen(
                         }
                     }
                 }
+                if (state.genres.isNotEmpty()) {
+                    FlowRow( modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+
+                    ) {
+                        state.genres.forEach {
+                            SuggestionChip(
+                                modifier = Modifier.padding(end = 8.dp),
+                                onClick = { /*TODO*/ },
+                                label = { Text(it.name,color = MaterialTheme.colorScheme.primary) },
+                            )
+                        }
+                    }
+                }
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    modifier = Modifier.padding(start = 16.dp),
-                    text = stringResource(R.string.overview),
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp),
-                    text = state.movie?.overview ?: "",
-                )
-                Spacer(modifier = Modifier.height(16.dp))
+                if (!state.movie?.overview.isNullOrEmpty() ) {
+                    Text(
+                        modifier = Modifier.padding(start = 16.dp),
+                        text = stringResource(R.string.overview),
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        text = state.movie.overview,
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+
                 Text(
                     modifier = Modifier.padding(start = 16.dp),
                     text = stringResource(R.string.cast),
@@ -238,7 +269,9 @@ fun DetailMovieScreen(
                     fontWeight = FontWeight.SemiBold
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                DetailCastItem(state.cast)
+                DetailCastItem(state.cast) {
+                    onAction(DetailMovieAction.DetailPersonal(it))
+                }
                 Spacer(modifier = Modifier.height(48.dp))
             }
         }
@@ -268,8 +301,18 @@ private fun DetailMovieScreenPreview() {
             vote_count = 1500,
             category = "popular"
         )
+        val genres =listOf(
+            Genre(14,"Fantasía"),
+            Genre(12,"Aventura"),
+            Genre(28,"Acción"),
+            Genre(16,"Animación"),
+            Genre(53,"Suspense")
+        )
         DetailMovieScreen(
-            state = DetailState(movie = sampleMovie),
+            state = DetailState(
+                movie = sampleMovie,
+                genres = genres
+            ),
             modifier = Modifier,
             onAction = {}
         )

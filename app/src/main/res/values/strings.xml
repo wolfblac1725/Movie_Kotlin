@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Paliculas</string>
     <string name="popular">Populares</string>
-    <string name="top_rated">Tendencia</string>
+    <string name="top_rated">Mejor calificadas</string>
     <string name="now_playing">Lo más Nuevo</string>
     <string name="popular_movies">Peliculas Populares</string>
     <string name="upcoming_movies">Proximas peliculas</string>
@@ -12,4 +12,6 @@
     <string name="character">Personaje: %s </string>
     <string name="overview">Descripción:</string>
     <string name="cast">Elenco:</string>
+    <string name="biography">Biografia</string>
+    <string name="movies">Películas</string>
 </resources>

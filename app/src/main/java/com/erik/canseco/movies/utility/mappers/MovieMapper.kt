@@ -2,6 +2,7 @@ package com.erik.canseco.movies.utility.mappers
 
 import android.util.Log
 import com.erik.canseco.movies.data.local.entity.MovieEntity
+import com.erik.canseco.movies.data.remote.response.CastCreditPersonDto
 import com.erik.canseco.movies.data.remote.response.MovieDto
 import com.erik.canseco.movies.domain.model.Movie
 
@@ -79,4 +80,23 @@ fun MovieEntity.toMovie(
             listOf(-1,-2)
         },
     )
+}
+fun CastCreditPersonDto.toMovie(): Movie{
+    return Movie(
+        id = id,
+        adult = adult ?: false,
+        backdrop_path = backdrop_path ?: "",
+        genre_ids = genre_ids,
+        original_language = original_language ?: "",
+        original_title = original_title ?: "",
+        overview = overview ?: "",
+        popularity = popularity ?:0.0,
+        poster_path = poster_path ?: "",
+        release_date = release_date ?: "",
+        title = title ?: "",
+        video = video ?: false,
+        vote_average = vote_average ?: 0.0,
+        vote_count = vote_count ?:0,
+        category = null,
+        )
 }

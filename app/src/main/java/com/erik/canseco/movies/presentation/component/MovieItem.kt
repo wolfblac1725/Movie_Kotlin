@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.request.ImageRequest
+import com.erik.canseco.movies.BuildConfig
 import com.erik.canseco.movies.data.remote.MovieApi
 import com.erik.canseco.movies.domain.model.Movie
 import com.erik.canseco.movies.ui.theme.MoviesTheme
@@ -53,7 +54,7 @@ fun MovieItem (
     ) {
         SubcomposeAsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(MovieApi.IMAGE_URL + movie.poster_path)
+                .data(BuildConfig.IMAGE_URL + movie.poster_path)
                 .build(),
             modifier = Modifier
                 .fillMaxWidth()

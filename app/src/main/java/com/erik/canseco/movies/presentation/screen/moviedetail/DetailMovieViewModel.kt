@@ -46,5 +46,38 @@ class DetailMovieViewModel @Inject constructor(
             }
         }
     }
+    /*fun getMovieDetail(idMovie: Int) {
+        viewModelScope.launch {
+            movieListRepository.get
+        }
+
+    }*/
+    fun getGenres(genres: List<Int>?) {
+        viewModelScope.launch {
+            genres?.let {
+                movieListRepository.getGenres(genres).collectLatest { result ->
+                    when (result) {
+                        is Resource.Error -> {
+                            state = state.copy(
+                                error = result.message
+                            )
+                        }
+
+                        is Resource.Loading -> {
+                            state = state.copy(
+                                isLoading = result.isLoading
+                            )
+                        }
+
+                        is Resource.Success -> {
+                            state = state.copy(
+                                genres = result.data ?: emptyList()
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 }

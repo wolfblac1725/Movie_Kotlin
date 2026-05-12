@@ -6,6 +6,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
 import com.erik.canseco.movies.data.local.entity.CastEntity
+import com.erik.canseco.movies.data.local.entity.GenreEntity
 import com.erik.canseco.movies.data.local.entity.MovieEntity
 import com.erik.canseco.movies.data.local.entity.MovieKey
 import com.erik.canseco.movies.data.local.entity.MoviePage
@@ -103,4 +104,13 @@ interface MovieDao {
 
     @Query("SELECT page FROM MoviePage WHERE category = :category")
     suspend fun getPageByCategory(category: String): Int?
+
+    @Query("SELECT COUNT(*) FROM GenreEntity")
+    suspend fun getCountGenres(): Int
+
+    @Upsert
+    suspend fun updateGenres(genre: List<GenreEntity>)
+    @Query("SELECT * FROM GenreEntity where id in (:genres)")
+    suspend fun getGenres(genres: List<Int>): List<GenreEntity>
+
 }

@@ -11,10 +11,11 @@ import kotlinx.serialization.json.Json
 
 @Composable
 fun ListViewComponent(
+    modifier: Modifier = Modifier,
     column: Int = 2,
     movies: LazyPagingItems<Movie>,
-    action: (ActionHome) -> Unit,
-    modifier: Modifier = Modifier) {
+    action: (ActionHome) -> Unit
+) {
     LazyVerticalGrid(
         modifier = modifier,
         columns = GridCells.Fixed(column)
