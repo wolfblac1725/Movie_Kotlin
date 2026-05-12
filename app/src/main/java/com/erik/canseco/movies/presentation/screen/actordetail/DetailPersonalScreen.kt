@@ -1,8 +1,5 @@
 package com.erik.canseco.movies.presentation.screen.actordetail
 
-import android.R.attr.name
-import android.content.res.Configuration.UI_MODE_NIGHT_NO
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,11 +42,8 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.erik.canseco.movies.BuildConfig
 import com.erik.canseco.movies.R
-import com.erik.canseco.movies.data.remote.MovieApi
 import com.erik.canseco.movies.domain.model.Person
 import com.erik.canseco.movies.presentation.component.Loader
-import com.erik.canseco.movies.ui.theme.AppTypography
-import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun DetailPersonalScreenRoot(
