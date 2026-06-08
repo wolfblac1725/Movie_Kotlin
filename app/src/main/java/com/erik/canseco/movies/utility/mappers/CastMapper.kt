@@ -3,6 +3,7 @@ package com.erik.canseco.movies.utility.mappers
 import com.erik.canseco.movies.data.local.entity.CastEntity
 import com.erik.canseco.movies.data.remote.response.CastDto
 import com.erik.canseco.movies.domain.model.Cast
+import com.erik.canseco.movies.domain.model.Movie
 
 fun CastDto.toCastEntity(
     idMovie: Int

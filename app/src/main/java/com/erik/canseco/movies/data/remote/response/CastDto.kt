@@ -1,16 +1,16 @@
 package com.erik.canseco.movies.data.remote.response
 
 data class CastDto(
-    val id: Int,
-    val adult: Boolean,
-    val cast_id: Int,
-    val character: String,
-    val credit_id: String,
-    val gender: Int,
-    val known_for_department: String,
-    val name: String,
-    val order: Int,
-    val original_name: String,
-    val popularity: Double,
-    val profile_path: String?
+    val id: Int = 0,
+    val adult: Boolean = false,
+    val cast_id: Int = 0,
+    val character: String = "",
+    val credit_id: String = "",
+    val gender: Int = 0,
+    val known_for_department: String = "",
+    val name: String = "",
+    val order: Int = 0,
+    val original_name: String = "",
+    val popularity: Double = 0.0,
+    val profile_path: String? = null
 )

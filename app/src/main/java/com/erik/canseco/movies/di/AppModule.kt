@@ -2,6 +2,7 @@ package com.erik.canseco.movies.di
 
 import android.app.Application
 import androidx.room.Room
+import com.erik.canseco.movies.BuildConfig
 import com.erik.canseco.movies.data.local.MovieDatabase
 import com.erik.canseco.movies.data.remote.APIKeyInterceptor
 import com.erik.canseco.movies.data.remote.MovieApi
@@ -31,7 +32,7 @@ object AppModule {
     fun providesMovieApi(): MovieApi {
         return Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(MovieApi.BASE_URL)
+            .baseUrl(BuildConfig.BASE_URL)
             .client(client)
             .build().create(MovieApi::class.java)
     }

@@ -9,3 +9,7 @@ object Home
 data class Detail(
     val movie: String
 )
+@Serializable
+data class DetailPersonal(
+    var actorId: Int
+)

@@ -15,6 +15,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -23,6 +24,11 @@ class HomeViewModel @Inject constructor(
     private val movieListRepository: MovieListRepository
 ) : ViewModel() {
 
+    init {
+        viewModelScope.launch {
+            movieListRepository.updateGenres()
+        }
+    }
     var state by mutableStateOf(HomeState())
         private set
 

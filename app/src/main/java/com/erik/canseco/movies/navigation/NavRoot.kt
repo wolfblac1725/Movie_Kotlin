@@ -7,6 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.erik.canseco.movies.domain.model.Movie
+import com.erik.canseco.movies.presentation.screen.actordetail.DetailPersonalScreen
+import com.erik.canseco.movies.presentation.screen.actordetail.DetailPersonalScreenRoot
 import com.erik.canseco.movies.presentation.screen.home.HomeScreenRoot
 import com.erik.canseco.movies.presentation.screen.moviedetail.DetailMovieScreenRoot
 import kotlinx.serialization.json.Json
@@ -37,8 +39,23 @@ fun NavRoot(
                 movie = movie,
                 onBack = {
                     navController.popBackStack()
+                },
+                onDetailPersonal = { actorId ->
+                    navController.navigate(DetailPersonal(actorId))
                 }
             )
+        }
+        composable <DetailPersonal> { backStackEntry ->
+            val actorId: DetailPersonal = backStackEntry.toRoute()
+            val actor = actorId.actorId
+            DetailPersonalScreenRoot(
+                actorId = actor,
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+
+
         }
     }
 }

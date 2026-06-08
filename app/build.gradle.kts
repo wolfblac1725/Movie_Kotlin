@@ -1,3 +1,8 @@
+@file:Suppress("UnstableApiUsage")
+import com.android.build.api.dsl.ApplicationBuildType
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -8,15 +13,16 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
+
 android {
     namespace = "com.erik.canseco.movies"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.erik.canseco.movies"
-        targetSdk = 36
-        minSdk = 21
-        versionCode = 4
+        minSdk = 26
+        targetSdk = 35
+        versionCode = 8
         versionName = "3.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -30,11 +36,22 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isDebuggable = true
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            configureProps(this)
+
+            // ESTA LÍNEA permite correr release en el emulador con la firma de debug
+            signingConfig = signingConfigs.getByName("debug")
+        }
+
+        debug {
+            // También configuramos las props para debug si las necesitas
+            configureProps(this)
         }
     }
     compileOptions {
@@ -46,6 +63,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.15"
@@ -54,6 +72,20 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+}
+fun configureProps( buildType: ApplicationBuildType){
+    val data = Properties()
+    data.load(FileInputStream(file("../config/data.properties")))
+    setBuildPropsByEnv( data, buildType)
+
+}
+fun setBuildPropsByEnv(
+    props: Properties,
+    buildType: ApplicationBuildType,
+) {
+    props.forEach { (key, value) ->
+        buildType.buildConfigField("String", key.toString(), value.toString())
     }
 }
 

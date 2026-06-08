@@ -1,7 +1,12 @@
 package com.erik.canseco.movies.data.remote
 
+import com.erik.canseco.movies.BuildConfig
+import com.erik.canseco.movies.data.remote.response.CombinedCreditPersonDto
+import com.erik.canseco.movies.data.remote.response.GenreDto
 import com.erik.canseco.movies.data.remote.response.MovieCastDto
+import com.erik.canseco.movies.data.remote.response.MovieDetailDto
 import com.erik.canseco.movies.data.remote.response.MovieListDto
+import com.erik.canseco.movies.data.remote.response.PersonDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -18,11 +23,22 @@ interface MovieApi {
         @Path("movie_id") movieId: Int
     ): MovieCastDto
 
+    @GET("movie/{movie_id}")
+    suspend fun getMovieDetail(
+        @Path("movie_id") movieId: Int
+    ): MovieDetailDto
 
-    companion object{
-        const val BASE_URL = "https://api.themoviedb.org/3/"
-        const val IMAGE_URL = "https://image.tmdb.org/t/p/w500"
-        const val API_KEY = "24b0da270f7f7499fe98810b509456b8f"
-        const val LANGUAGE = "es-ES"
-    }
+    @GET("genre/movie/list")
+    suspend fun getGenres(): GenreDto
+
+    @GET ("person/{person_id}")
+    suspend fun getPersonDetail(
+        @Path("person_id") personId: Int
+    ): PersonDto
+
+    @GET("person/{person_id}/combined_credits")
+    suspend fun getPersonCredits(
+        @Path("person_id") personId: Int
+    ): CombinedCreditPersonDto
+
 }
