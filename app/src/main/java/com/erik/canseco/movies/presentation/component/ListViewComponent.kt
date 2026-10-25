@@ -1,9 +1,11 @@
 package com.erik.canseco.movies.presentation.component
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.erik.canseco.movies.domain.model.Movie
 import com.erik.canseco.movies.presentation.screen.home.ActionHome
@@ -14,11 +16,13 @@ fun ListViewComponent(
     modifier: Modifier = Modifier,
     column: Int = 2,
     movies: LazyPagingItems<Movie>,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     action: (ActionHome) -> Unit
 ) {
     LazyVerticalGrid(
         modifier = modifier,
-        columns = GridCells.Fixed(column)
+        columns = GridCells.Fixed(column),
+        contentPadding = contentPadding
     ) {
         items(movies.itemCount) {
             movies[it]?.let { movie->

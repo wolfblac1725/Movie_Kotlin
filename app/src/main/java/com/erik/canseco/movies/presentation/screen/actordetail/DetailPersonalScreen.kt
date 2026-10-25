@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -93,13 +94,15 @@ fun DetailPersonalScreen(
             )
         },
         content = { padding ->
-            Box{
+            Box(modifier = Modifier.fillMaxSize()){
                 if(state.isLoading){
                     Loader()
                 }
                 Column(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
                         .padding(padding)
+                        .consumeWindowInsets(padding)
                         .verticalScroll(rememberScrollState())
                 ) {
                     val imageUrl = BuildConfig.IMAGE_URL + person?.profilePath

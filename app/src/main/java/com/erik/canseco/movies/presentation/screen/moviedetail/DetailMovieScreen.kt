@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -113,8 +115,9 @@ fun DetailMovieScreen(
                         .height(240.dp)
                 )
             Column(modifier = Modifier
+                .fillMaxSize()
                 .padding(padding)
-                .fillMaxWidth()
+                .consumeWindowInsets(padding)
                 .verticalScroll(rememberScrollState())
             ) {
                 val imageUrl= BuildConfig.IMAGE_URL + state.movie?.backdrop_path

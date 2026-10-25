@@ -1,6 +1,5 @@
 package com.erik.canseco.movies.presentation.screen.home
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -62,7 +61,8 @@ fun HomeScreen(
                 column = 2,
                 movies = movies,
                 action = action,
-                modifier = Modifier.padding(padding)
+                contentPadding = padding,
+                modifier = Modifier
             )
            /* when(state.typeShared){
                 TypeShared.Popular -> {

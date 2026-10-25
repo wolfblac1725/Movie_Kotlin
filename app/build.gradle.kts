@@ -21,9 +21,9 @@ android {
     defaultConfig {
         applicationId = "com.erik.canseco.movies"
         minSdk = 26
-        targetSdk = 35
-        versionCode = 8
-        versionName = "3.0"
+        targetSdk = 37
+        versionCode = 10
+        versionName = "3.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -36,7 +36,7 @@ android {
 
     buildTypes {
         release {
-            isDebuggable = true
+            isDebuggable = false
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
