@@ -15,6 +15,7 @@ import com.erik.canseco.movies.data.remote.MovieApi
 import com.erik.canseco.movies.domain.model.Cast
 import com.erik.canseco.movies.domain.model.Genre
 import com.erik.canseco.movies.domain.model.Movie
+import com.erik.canseco.movies.domain.model.MovieVideo
 import com.erik.canseco.movies.domain.model.Person
 import com.erik.canseco.movies.domain.repository.MovieListRepository
 import com.erik.canseco.movies.utility.Resource
@@ -97,6 +98,32 @@ class MovieListRepositoryImpl @Inject constructor(
                 emit(Resource.Success(localMovieCast.map { it.toCast(idMovie) }))
             } else {
                 emit(Resource.Error("No se pudieron cargar los actores"))
+            }
+            emit(Resource.Loading(false))
+        }
+    }
+
+    override fun getMovieTrailers(idMovie: Int): Flow<Resource<List<MovieVideo>>> {
+        return flow {
+            emit(Resource.Loading(true))
+            try {
+                val trailers = movieApi.getMovieVideos(idMovie).results
+                    .filter { it.site.equals("YouTube", ignoreCase = true) && it.type.equals("Trailer", ignoreCase = true) && it.key.isNotBlank() }
+                    .map { video ->
+                        MovieVideo(
+                            key = video.key,
+                            name = video.name,
+                            site = video.site,
+                            type = video.type
+                        )
+                    }
+                emit(Resource.Success(trailers))
+            } catch (e: IOException) {
+                Log.e("Error", e.toString())
+                emit(Resource.Error(e.toString()))
+            } catch (e: HttpException) {
+                Log.e("Error", e.toString())
+                emit(Resource.Error(e.toString()))
             }
             emit(Resource.Loading(false))
         }

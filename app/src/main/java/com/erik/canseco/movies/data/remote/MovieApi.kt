@@ -7,6 +7,7 @@ import com.erik.canseco.movies.data.remote.response.MovieCastDto
 import com.erik.canseco.movies.data.remote.response.MovieDetailDto
 import com.erik.canseco.movies.data.remote.response.MovieListDto
 import com.erik.canseco.movies.data.remote.response.PersonDto
+import com.erik.canseco.movies.data.remote.response.MovieVideosDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -27,6 +28,11 @@ interface MovieApi {
     suspend fun getMovieDetail(
         @Path("movie_id") movieId: Int
     ): MovieDetailDto
+
+    @GET("movie/{movie_id}/videos")
+    suspend fun getMovieVideos(
+        @Path("movie_id") movieId: Int
+    ): MovieVideosDto
 
     @GET("genre/movie/list")
     suspend fun getGenres(): GenreDto

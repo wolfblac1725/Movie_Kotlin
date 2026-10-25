@@ -31,6 +31,7 @@ class DetailMovieViewModel @Inject constructor(
                             error = result.message
                         )
                     }
+
                     is Resource.Loading -> {
                         state = state.copy(
                             isLoading = result.isLoading
@@ -46,6 +47,33 @@ class DetailMovieViewModel @Inject constructor(
             }
         }
     }
+
+    fun getTrailers(idMovie: Int) {
+        viewModelScope.launch {
+            movieListRepository.getMovieTrailers(idMovie).collectLatest { result ->
+                when (result) {
+                    is Resource.Error -> {
+                        state = state.copy(
+                            trailersError = result.message,
+                            isLoadingTrailers = false,
+                            trailersLoaded = true
+                        )
+                    }
+                    is Resource.Loading -> {
+                        state = state.copy(isLoadingTrailers = result.isLoading)
+                    }
+                    is Resource.Success -> {
+                        state = state.copy(
+                            trailers = result.data ?: emptyList(),
+                            trailersError = null,
+                            trailersLoaded = true
+                        )
+                    }
+                }
+            }
+        }
+    }
+
     /*fun getMovieDetail(idMovie: Int) {
         viewModelScope.launch {
             movieListRepository.get

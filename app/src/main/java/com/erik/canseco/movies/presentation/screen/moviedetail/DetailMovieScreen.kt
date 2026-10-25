@@ -66,6 +66,7 @@ fun DetailMovieScreenRoot(
         viewModel.setMovie(movie)
         viewModel.getCast(movie.id)
         viewModel.getGenres(movie.genre_ids)
+        viewModel.getTrailers(movie.id)
     }
     val state = viewModel.state
     DetailMovieScreen(
@@ -264,6 +265,30 @@ fun DetailMovieScreen(
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
+
+                Text(
+                    modifier = Modifier.padding(start = 16.dp),
+                    text = stringResource(R.string.trailers),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                when {
+                    state.isLoadingTrailers -> Text(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        text = stringResource(R.string.loading_trailers)
+                    )
+                    state.trailersError != null -> Text(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        text = stringResource(R.string.trailers_error)
+                    )
+                    state.trailers.isNotEmpty() -> MovieTrailersItem(state.trailers)
+                    state.trailersLoaded -> Text(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        text = stringResource(R.string.no_trailers)
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
                     modifier = Modifier.padding(start = 16.dp),

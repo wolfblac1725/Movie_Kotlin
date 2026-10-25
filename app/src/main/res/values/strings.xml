@@ -12,6 +12,14 @@
     <string name="character">Personaje: %s </string>
     <string name="overview">Descripción:</string>
     <string name="cast">Elenco:</string>
+    <string name="trailers">Tráileres</string>
+    <string name="loading_trailers">Cargando tráileres…</string>
+    <string name="trailers_error">No se pudieron cargar los tráileres.</string>
+    <string name="no_trailers">No hay tráileres disponibles.</string>
+    <string name="play_trailer">Reproducir tráiler: %s</string>
+    <string name="close_player">Cerrar</string>
     <string name="biography">Biografia</string>
     <string name="movies">Películas</string>
+    <string name="admob_app_id">ca-app-pub-3361811323965412~4086334562</string>
+    <string name="privacy_options">Privacidad</string>
 </resources>
