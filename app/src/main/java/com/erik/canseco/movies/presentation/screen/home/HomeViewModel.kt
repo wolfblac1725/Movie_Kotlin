@@ -11,14 +11,10 @@ import com.erik.canseco.movies.domain.model.Movie
 import com.erik.canseco.movies.domain.repository.MovieListRepository
 import com.erik.canseco.movies.utility.TypeShared
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val movieListRepository: MovieListRepository
@@ -32,28 +28,30 @@ class HomeViewModel @Inject constructor(
     var state by mutableStateOf(HomeState())
         private set
 
-    private val _currentCategory = MutableStateFlow(state.typeShared)
+    private val moviesByCategory: Map<TypeShared, Flow<PagingData<Movie>>> =
+        listOf(
+            TypeShared.Popular,
+            TypeShared.TopRated,
+            TypeShared.NowPlaying
+        ).associateWith { category ->
+            movieListRepository.getMovieListPaging2(category).cachedIn(viewModelScope)
+        }
 
-    val movies: Flow<PagingData<Movie>> = _currentCategory.flatMapLatest { category ->
-        movieListRepository.getMovieListPaging2(category)
-    }.cachedIn(viewModelScope)
-
+    fun moviesFor(category: TypeShared): Flow<PagingData<Movie>> =
+        moviesByCategory.getValue(category)
 
     fun onAction(action: ActionHome) {
         when (action) {
             is ActionHome.MoviesPopular -> {
-                _currentCategory.value = TypeShared.Popular
-                state = state.copy(typeShared = TypeShared.Popular)
+                state = state.copy(selectedCategory = TypeShared.Popular)
             }
 
             is ActionHome.MoviesTopRated -> {
-                _currentCategory.value = TypeShared.TopRated
-                state = state.copy(typeShared = TypeShared.TopRated)
+                state = state.copy(selectedCategory = TypeShared.TopRated)
             }
 
             is ActionHome.MoviesNowPlaying -> {
-                _currentCategory.value = TypeShared.NowPlaying
-                state = state.copy(typeShared = TypeShared.NowPlaying)
+                state = state.copy(selectedCategory = TypeShared.NowPlaying)
             }
             else -> {
 

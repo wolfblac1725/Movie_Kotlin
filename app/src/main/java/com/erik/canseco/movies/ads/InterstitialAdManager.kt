@@ -19,6 +19,7 @@ object InterstitialAdManager {
 
     private var interstitialAd: InterstitialAd? = null
     private var isLoading = false
+    private var isShowing = false
 
     fun preload(context: Context) {
         val adUnitId = AdConfig.interstitialAdUnitId
@@ -48,29 +49,33 @@ object InterstitialAdManager {
         if (!AdsConsentManager.canRequestAds.value) return
 
         val preferences = activity.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val actions = preferences.getInt(KEY_ACTIONS_SINCE_LAST_AD, 0) + 1
+        val actions = (preferences.getInt(KEY_ACTIONS_SINCE_LAST_AD, 0) + 1)
+            .coerceAtMost(REQUIRED_ACTIONS)
         preferences.edit().putInt(KEY_ACTIONS_SINCE_LAST_AD, actions).apply()
 
         val lastShownAt = preferences.getLong(KEY_LAST_SHOWN_AT, 0L)
         val intervalElapsed = System.currentTimeMillis() - lastShownAt >= MIN_INTERVAL_MILLIS
         val ad = interstitialAd
-        if (actions < REQUIRED_ACTIONS || !intervalElapsed || ad == null) {
+        if (actions < REQUIRED_ACTIONS || !intervalElapsed || ad == null || isShowing) {
             preload(activity)
             return
         }
 
         interstitialAd = null
+        isShowing = true
         ad.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdShowedFullScreenContent() {
                 recordImpressionTime(preferences)
             }
 
             override fun onAdDismissedFullScreenContent() {
+                isShowing = false
                 preload(activity)
             }
 
             override fun onAdFailedToShowFullScreenContent(error: AdError) {
                 interstitialAd = null
+                isShowing = false
                 Log.w("InterstitialAdManager", "Interstitial failed to show: ${error.message}")
                 preload(activity)
             }

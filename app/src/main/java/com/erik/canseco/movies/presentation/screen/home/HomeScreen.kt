@@ -11,6 +11,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -25,6 +26,7 @@ import com.erik.canseco.movies.ads.InterstitialAdManager
 import com.erik.canseco.movies.domain.model.Movie
 import com.erik.canseco.movies.presentation.component.BottomNavigationBar
 import com.erik.canseco.movies.presentation.component.ListViewComponent
+import com.erik.canseco.movies.utility.TypeShared
 import com.google.android.ump.UserMessagingPlatform
 import com.google.android.gms.ads.MobileAds
 
@@ -36,11 +38,12 @@ fun HomeScreenRoot(
     val homeViewModel: HomeViewModel = hiltViewModel()
     val context = LocalContext.current
     val privacyOptionsRequired by AdsConsentManager.privacyOptionsRequired.collectAsState()
+    val state = homeViewModel.state
 
     HomeScreen(
         modifier = modifier,
-        state = homeViewModel.state,
-        movies = homeViewModel.movies.collectAsLazyPagingItems(),
+        state = state,
+        movies = homeViewModel.moviesFor(state.selectedCategory).collectAsLazyPagingItems(),
         privacyOptionsRequired = privacyOptionsRequired,
         onOpenPrivacyOptions = {
             (context as? Activity)?.let { activity ->
@@ -87,6 +90,8 @@ fun HomeScreen(
     onOpenPrivacyOptions: () -> Unit,
     action: (ActionHome) -> Unit
 ) {
+    val listStateHolder = rememberSaveableStateHolder()
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -104,59 +109,27 @@ fun HomeScreen(
             )
         },
         content = { padding ->
-
-            ListViewComponent(
-                column = 2,
-                movies = movies,
-                action = action,
-                contentPadding = padding,
-                modifier = Modifier
-            )
-           /* when(state.typeShared){
-                TypeShared.Popular -> {
-                    if(state.moviesPopular.isLoading)
-                        Loader()
-                    else if (state.moviesPopular.error != null)
-                        Text(text = state.moviesPopular.error)
-                    else
-                        ListViewComponent(
-                            column = 2,
-                            movies = state.moviesPopular.movies,
-                            action = action,
-                            modifier = Modifier.padding(padding)
-                        )
+            listStateHolder.SaveableStateProvider(
+                key = when (state.selectedCategory) {
+                    TypeShared.Popular -> "popular"
+                    TypeShared.TopRated -> "top_rated"
+                    TypeShared.NowPlaying -> "now_playing"
                 }
-                TypeShared.TopRated -> {
-                    if(state.moviesTopRated.isLoading)
-                        Loader()
-                    else if (state.moviesTopRated.error != null)
-                        Text(text = state.moviesTopRated.error)
-                    else
-                        ListViewComponent(
-                            column = 2,
-                            movies = state.moviesTopRated.movies,
-                            action = action,
-                            modifier = Modifier.padding(padding)
-                        )
-                }
-                TypeShared.NowPlaying -> {
-                    if(state.moviesNowPlaying.isLoading)
-                        Loader()
-                    else if (state.moviesNowPlaying.error != null)
-                        Text(text = state.moviesNowPlaying.error)
-                    else
-                        ListViewComponent(
-                            column = 2,
-                            movies = state.moviesNowPlaying.movies,
-                            action = action,
-                            modifier = Modifier.padding(padding)
-                        )
-                }
-            }*/
+            ) {
+                ListViewComponent(
+                    column = 2,
+                    movies = movies,
+                    action = action,
+                    contentPadding = padding
+                )
+            }
         },
         bottomBar = {
             Column {
-                BottomNavigationBar(onEvent = action)
+                BottomNavigationBar(
+                    selectedCategory = state.selectedCategory,
+                    onEvent = action
+                )
                 AdMobBanner()
             }
         }

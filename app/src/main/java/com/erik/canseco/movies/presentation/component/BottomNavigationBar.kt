@@ -10,52 +10,36 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.res.stringResource
 import com.erik.canseco.movies.R
 import com.erik.canseco.movies.presentation.screen.home.ActionHome
+import com.erik.canseco.movies.utility.TypeShared
 import com.erik.canseco.movies.utility.BottomItem
 
 @Composable
 fun BottomNavigationBar(
+    selectedCategory: TypeShared,
     onEvent: (ActionHome) -> Unit
 ) {
     val items = listOf(
-        BottomItem(
-            title = stringResource(R.string.top_rated),
-            icon = Icons.Rounded.Movie
-        ),
-        BottomItem(
-            title = stringResource(R.string.popular),
-            icon = Icons.Rounded.Upcoming
-        ),
-        BottomItem(
-            title = stringResource(R.string.now_playing),
-            icon = Icons.Rounded.PlayCircleFilled
-        )
+        BottomItem(stringResource(R.string.top_rated), Icons.Rounded.Movie) to
+            TypeShared.TopRated,
+        BottomItem(stringResource(R.string.popular), Icons.Rounded.Upcoming) to
+            TypeShared.Popular,
+        BottomItem(stringResource(R.string.now_playing), Icons.Rounded.PlayCircleFilled) to
+            TypeShared.NowPlaying
     )
-    val selectedItem = rememberSaveable {
-        mutableIntStateOf(0)
-    }
-
     NavigationBar {
-        items.forEachIndexed { index, item ->
+        items.forEach { (item, category) ->
+            val action = when (category) {
+                TypeShared.TopRated -> ActionHome.MoviesTopRated
+                TypeShared.Popular -> ActionHome.MoviesPopular
+                TypeShared.NowPlaying -> ActionHome.MoviesNowPlaying
+            }
             NavigationBarItem(
-                selected = selectedItem.intValue == index,
+                selected = selectedCategory == category,
                 onClick = {
-                    selectedItem.intValue = index
-                    when (selectedItem.intValue){
-                        0 -> {
-                            onEvent(ActionHome.MoviesTopRated)
-                        }
-                        1 -> {
-                            onEvent(ActionHome.MoviesPopular)
-                        }
-                        2 -> {
-                            onEvent(ActionHome.MoviesNowPlaying)
-                        }
-                    }
+                    onEvent(action)
                 },
                 icon = {
                     Icon(

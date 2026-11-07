@@ -16,16 +16,19 @@ plugins {
 
 android {
     namespace = "com.erik.canseco.movies"
-    compileSdk = 37
+    compileSdk {
+        version = release(37)
+    }
 
     defaultConfig {
         applicationId = "com.erik.canseco.movies"
-        minSdk = 26
+        minSdk = 28
         targetSdk = 37
-        versionCode = 10
-        versionName = "3.2"
+        versionCode = 15
+        versionName = "4.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders["admobAppId"] = "ca-app-pub-3361811323965412~4086334562"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -100,6 +103,8 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.google.fonts)
+    implementation(libs.google.mobile.ads)
+    implementation(libs.google.ump)
 
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization)

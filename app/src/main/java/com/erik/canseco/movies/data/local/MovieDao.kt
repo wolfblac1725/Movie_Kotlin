@@ -63,26 +63,42 @@ interface MovieDao {
     @Transaction
     suspend fun clearMoviesForCategory(categoryToClear: String) {
         val moviesToProcess = getMoviesAssociatedWithCategory(categoryToClear)
+        val moviesToDelete = mutableListOf<Int>()
+        val moviesToUpdate = mutableListOf<MovieEntity>()
         for (movie in moviesToProcess) {
             val categories = movie.category.split(',').map { it.trim() }.toMutableList()
             if (categories.contains(categoryToClear)) {
                 categories.remove(categoryToClear)
                 if (categories.isEmpty()) {
-                    deleteMovieById(movie.id)
+                    moviesToDelete.add(movie.id)
                 } else {
-                    updateMovie(movie.copy(category = categories.joinToString(",")))
+                    moviesToUpdate.add(movie.copy(category = categories.joinToString(",")))
                 }
             }
+        }
+        if (moviesToDelete.isNotEmpty()) {
+            for (id in moviesToDelete) {
+                deleteMovieById(id)
+            }
+        }
+        if (moviesToUpdate.isNotEmpty()) {
+            updateMovieList(moviesToUpdate)
         }
     }
     @Transaction
     suspend fun updateMovieListCategory(movieList: List<MovieEntity>) {
         for(movie in movieList){
             val movieData = getMovieById(movie.id)
-            if(movieData == null)
+            if(movieData == null) {
                 updateMovie(movie)
-            else
-                updateMovie(movieData.copy(category = movieData.category.plus(",").plus(movie.category)))
+            } else {
+                val existingCategories = movieData.category.split(',').map { it.trim() }.toSet()
+                val newCategories = movie.category.split(',').map { it.trim() }
+                val merged = (existingCategories + newCategories).filter { it.isNotBlank() }.joinToString(",")
+                if (merged != movieData.category) {
+                    updateMovie(movieData.copy(category = merged))
+                }
+            }
         }
     }
 
